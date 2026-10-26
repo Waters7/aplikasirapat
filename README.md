@@ -4,12 +4,45 @@ Aplikasi ini menggunakan Laravel 12, PHP 8.2 atau lebih baru, dan MySQL. Sumber 
 
 ## Menjalankan di komputer ini
 
-1. Jalankan Apache dan MySQL melalui XAMPP.
+### Uji lokal Windows tanpa MySQL
+
+Klik dua kali `JALANKAN-LOKAL.cmd` di folder proyek, lalu buka http://127.0.0.1:8000.
+Biarkan jendela terminal terbuka; tekan Ctrl+C untuk menghentikan server.
+Jika port tersebut sudah digunakan, jalankan `JALANKAN-LOKAL.cmd -Port 8001`.
+
+Peluncur mendeteksi PHP Laragon, PHP di PATH, atau XAMPP. Lokasi lain dapat dipilih
+dengan `-PhpPath "C:\lokasi\php.exe"`. Mode ini memakai `.env.preview` dan database
+`laravel-app/database/preview.sqlite` terpisah; konfigurasi `.env` MySQL tetap disimpan.
+Pada instalasi baru, login `admin` / `password`. Mode ini untuk pengujian lokal;
+data pegawai dan rapat lama tidak disertakan dalam ZIP dan memerlukan backup MySQL.
+Menjalankan ulang peluncur mempertahankan database dan kunci aplikasi uji.
+
+Arsip ini sudah menyertakan dependensi dan aset. Untuk pemasangan dari kode sumber,
+jalankan `composer install`, `npm ci`, dan `npm run build` di `laravel-app` dahulu.
+PHP minimal 8.2 dengan `pdo_sqlite` diperlukan untuk mode uji. Aset saat ini memerlukan
+Node.js 20.19+ pada seri 20, atau 22.12+; pemeriksaan dilakukan dengan Node.js 22.23.2.
+
+### Menggunakan database MySQL
+
+1. Jalankan MySQL melalui Laragon atau XAMPP. Apache tidak diperlukan untuk `artisan serve`.
 2. Buka terminal di folder `laravel-app/`.
 3. Jika dependensi belum tersedia, jalankan `composer install` dan `npm install`.
-4. Pastikan `.env` memakai database MySQL `rapat_poltekkes` (nilai bawaan XAMPP: host `127.0.0.1`, port `3306`, user `root`, password kosong).
+4. Buat database `rapat_poltekkes` jika belum tersedia, atau pulihkan backup database lama. Pastikan kredensial di `.env` sesuai MySQL Anda (contoh XAMPP: host `127.0.0.1`, port `3306`, user `root`, password kosong). Pada instalasi baru, salin `.env.example` menjadi `.env` dan jalankan `php artisan key:generate` hanya jika `APP_KEY` masih kosong.
 5. Jalankan `php artisan migrate --force`, `php artisan db:seed --force`, dan `npm run build`.
 6. Jalankan `php artisan serve --host=127.0.0.1 --port=8000`, lalu buka `http://127.0.0.1:8000/`.
+
+`composer dev` juga menjalankan server PHP tersebut. Jalankan `npm run build` setelah
+mengubah aset, atau `npm run dev` di terminal kedua untuk pengembangan tampilan.
+
+### Hasil troubleshooting 26 Oktober 2026
+
+- `composer dev` diperbaiki: sebelumnya memanggil `artisan dev`, yang tidak tersedia.
+- PHP 8.4.25 Laragon dapat menjalankan aplikasi; PHP/Composer belum tersedia di PATH terminal biasa.
+- Build Vite berhasil. Semua 44 pengujian yang disertakan lulus (401 assertions), menggunakan SQLite untuk pengujian.
+- Peluncur Windows berhasil menjalankan migrasi dan seeder SQLite, termasuk saat dijalankan ulang tanpa mengganti kunci aplikasi. Pemeriksaan HTTP dashboard, login, Live Board, data Live Board, health check, dan aset CSS/JS semuanya menghasilkan status 200. Login akun awal dan akses halaman admin juga berhasil.
+- MySQL di `127.0.0.1:3306` belum aktif saat pemeriksaan; koneksi ditolak. Integrasi dengan database MySQL lama belum diverifikasi.
+- Error izin tulis cache/log saat pengujian awal berasal dari sandbox pemeriksaan; pengujian berhasil di luar sandbox tanpa perubahan izin folder.
+- PHP 8.3 Laragon mengeluarkan peringatan `mysqli is already loaded`; peluncur di komputer ini memilih PHP 8.4 yang tidak mengeluarkan peringatan tersebut.
 
 Migrasi tidak menghapus atau mengisi ulang data aplikasi yang sudah ada. Seeder hanya menambahkan nilai pengaturan/ruang yang belum tersedia dan akun Super Admin awal jika tabel akun lama kosong. Pada instalasi baru, login awal adalah username `admin` / kata sandi `password`; segera ganti sebelum aplikasi dipakai.
 
