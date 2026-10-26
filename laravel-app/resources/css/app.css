@@ -1,0 +1,124 @@
+@import 'tailwindcss/theme.css' layer(theme);
+@import './legacy.css' layer(base);
+@import 'tailwindcss/utilities.css' layer(utilities);
+
+@source '../views/**/*.blade.php';
+@source '../js/**/*.js';
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    animation: page-enter 420ms ease-out both;
+}
+
+.employee-identity {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
+}
+
+.admin-menu {
+    padding-top: 12px;
+}
+
+.admin-menu-toggle::-webkit-details-marker {
+    display: none;
+}
+
+.admin-menu-toggle {
+    list-style: none;
+    cursor: pointer;
+}
+
+.admin-menu-toggle {
+    display: flex;
+    width: 44px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+}
+
+.admin-menu-toggle > span {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.admin-menu-toggle i {
+    display: block;
+    width: 20px;
+    height: 2px;
+    border-radius: 2px;
+    background: currentColor;
+}
+
+.admin-menu-panel {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 8px;
+}
+
+.admin-menu-panel a {
+    display: inline-block;
+}
+
+@keyframes page-enter {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.reveal-on-scroll {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 420ms ease, transform 420ms ease;
+}
+
+.reveal-on-scroll.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.btn,
+button.calendar-day,
+.mt {
+    transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.btn:active,
+button.calendar-day:active {
+    transform: scale(0.97);
+}
+
+.mt:hover {
+    transform: translateY(-2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .reveal-on-scroll {
+        opacity: 1;
+        transform: none;
+    }
+}
